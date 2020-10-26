@@ -1,0 +1,30 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBManager</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<br><br>
+
+<div class="center">
+    <a href="/"><i class="white-text medium material-icons">home</i></a>&emsp;&emsp;
+    <a href="/"><i class="white-text medium material-icons">desktop_windows</i></a>&emsp;&emsp;
+    <a href="/"><i class="white-text medium material-icons">settings</i></a>&emsp;&emsp;
+</div>
+
+{% block content %}
+
+{% endblock %}
+
+
+</body>
+</html>

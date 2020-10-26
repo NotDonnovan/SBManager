@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<p class="center">i did it</p>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<br><br>
+<div class="container">
+    <div class="card-panel" style="background-color: #dcdbe1">
+        <table class="highlight">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for key in torrents %}
+            <tr>
+
+                <td>{{key.tname}}</td>
+                <td>{{key.tstate}}</td>
+
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+{% endblock %}
