@@ -1,5 +1,48 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<br><br>
+<form method="POST" class="container">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col s12">
+            <div class="input-field col s6 offset-s3 center">
+                {{form.name.label_tag}}{{form.name}}
+                <br><br>
+            </div>
+            <div class="input-field col s4 offset-s4">
+                {{form.host.label_tag}}{{form.host}}
+                <br><br>
+            </div>
+            <div class="row">
 
+                <div class="input-field col s4 offset-s2">
+                    {{form.login.label_tag}}{{form.login}}
+                    <br><br>
+                </div>
+                 <div class="input-field col s4">
+                    {{form.password.label_tag}}{{form.password}}
+                    <br><br>
+                </div>
+
+            </div>
+            <div class="input-field col s2 offset-s5">
+                {{form.port.label_tag}}{{form.port}}
+                <br><br>
+            </div>
+
+            <div class="col s6 offset-s3 center">
+                <button class="btn waves-effect waves-light offset-s4" style="background-color: #2C3531" type="submit">Submit
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<!--JavaScript at end of body for optimized loading-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 {% endblock %}

@@ -1,3 +1,7 @@
+from .models import Seedbox
+import qbittorrentapi
+from hurry.filesize import size, alternative
+
 def status_rename(string):
     status = {
         'pausedUP' : 'Complete',
@@ -20,4 +24,32 @@ def status_rename(string):
         string = status[string]
 
     return string
+
+def get_torrents():
+    clients = []
+    torrents = []
+
+    for box in Seedbox.objects.all():
+        clients.append(
+            qbittorrentapi.Client(
+                host=box.host,
+                port=int(box.port),
+                username=box.login,
+                password=box.password)
+        )
+
+    for client in clients:
+        for torrent in client.torrents_info():
+            torrents.append(
+                {'name': torrent.name,
+                 'state': status_rename(torrent.state),
+                 'progress': (torrent.progress * 100),
+                 'size': (size(torrent.size, system=alternative)),
+                 'ratio': (round(torrent.ratio, 2)),
+                 }
+            )
+
+    return torrents
+
+
 

@@ -3,14 +3,25 @@
 {% block content %}
 <div class="container">
 
-    <a href="/">Clients</a>
+    <a class="black-text waves-effect waves-teal btn disabled">Clients</a>
     <hr>
 </div>
 <br>
+
+
 <div class="row">
+    {% for client in seedbox_list %}
     <div class="offset-s1 col s2 card-panel center z-depth-3" style="background-color: #dcdbe1">
-        <a href="/settings/add_client"><i class="material-icons large">add</i></a>
+        <br>
+        <a href="">{{client.name}}</a>
+        <br><br>
+    </div>
+    {% endfor %}
+    <div class="offset-s1 col s2 card-panel center z-depth-3" style="background-color: #dcdbe1">
+        <a href="/settings/add_client"><i class="material-icons medium">add_box</i></a>
     </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 {% endblock %}
