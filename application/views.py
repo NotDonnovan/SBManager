@@ -27,6 +27,10 @@ torrents = [{'name': torrent.name,
 
 
 def home(request):
-
-
     return render(request, 'application/index.html', {'torrents': torrents})
+
+def client_settings(request):
+    return render(request, 'application/client_settings.html')
+
+def new_client(request):
+    pass
