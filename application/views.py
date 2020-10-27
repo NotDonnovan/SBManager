@@ -1,6 +1,10 @@
 from django.shortcuts import render
 import qbittorrentapi
 import environ
+from .functions import status_rename
+from hurry.filesize import size, alternative
+
+
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
@@ -13,10 +17,16 @@ qbt_client = qbittorrentapi.Client(
     username=env('qbt_user'),
     password=env('qbt_password'))
 
+torrents = [{'name': torrent.name,
+             'state': status_rename(torrent.state),
+             'progress': (torrent.progress * 100),
+             'size': (size(torrent.size, system=alternative)),
+             'ratio': (round(torrent.ratio, 2)),
+             }
+            for torrent in qbt_client.torrents_info()]
+
 
 def home(request):
 
-    torrents = [{'tname': torrent.name, 'tstate': torrent.state}
-                 for torrent in qbt_client.torrents_info()]
 
     return render(request, 'application/index.html', {'torrents': torrents})

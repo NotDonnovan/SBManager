@@ -1,29 +1,40 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<br><br>
-<div class="container">
-    <div class="card-panel" style="background-color: #dcdbe1">
-        <table class="highlight">
+
+    <div class="row">
+
+        <table class="col s10 offset-s1 highlight">
             <thead>
             <tr>
                 <th>Name</th>
                 <th>Status</th>
+                <th>Ratio</th>
+                <th>Size</th>
+                <th class="center">Progress</th>
             </tr>
             </thead>
 
             <tbody>
-            {% for key in torrents %}
+            {% for t in torrents %}
+
             <tr>
 
-                <td>{{key.tname}}</td>
-                <td>{{key.tstate}}</td>
+                <td>{{t.name}}</td>
+                <td>{{t.state}}</td>
+                <td>{{t.ratio}}</td>
+                <td>{{t.size}}</td>
+                <td class="center">
+                    <label>{{t.progress}}%</label>
+                    <div class="progress">
+                        <div class="determinate" style="width: {{t.progress}}%"></div>
+                    </div>
+                </td>
 
             </tr>
             {% endfor %}
             </tbody>
         </table>
-    </div>
 </div>
 
 
