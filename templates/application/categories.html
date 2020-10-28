@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<script src="{% static 'js/jquery.formset.js' %}"></script>
 <div class="container">
 
     <a href="/settings/clients" class="black-text waves-effect btn-flat">Clients</a>&emsp;
@@ -11,6 +12,57 @@
 <br>
 
 
+{{ form.management_form }}
+
+{% for cat in form %}
+
+                <div class="link-formset">
+
+                    <div class="row">
+
+                        <div class="input-field col s6">
+                            {{ cat.name }}{{cat.name.label_tag}}
+
+                            {% if cat.name.errors %}
+                                {% for error in cat.name.errors %}
+                                    {{ error|escape }}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="input-field col s5">
+                                {{ cat.path }}{{cat.path.label_tag}}
+                                {% if cat.path.errors %}
+                                {% for error in cat.path.errors %}
+                                {{ error|escape }}
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="col s1">
+                                <br><br>
+                                <div class="DelLink"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+
+
+<script>
+    $('.link-formset').formset({
+        addText: 'Add part',
+        deleteText: 'Remove',
+        deleteContainerClass: 'DelLink',
+        addContainerClass: 'AddLink',
+    });
+</script>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>

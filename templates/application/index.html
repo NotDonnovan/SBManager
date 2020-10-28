@@ -3,7 +3,7 @@
 {% block content %}
 <br><br>
     <div class="row">
-
+        {% if torrents %}
         <table class="col s10 offset-s1 highlight">
             <thead>
             <tr>
@@ -36,9 +36,15 @@
                 </td>
 
             </tr>
+
             {% endfor %}
             </tbody>
+
         </table>
+        {% else %}
+        <p class="center">Nothing here :(</p>
+        <p class="center">Try <a href="/settings/clients">adding a client</a></p>
+        {% endif %}
 </div>
 
 

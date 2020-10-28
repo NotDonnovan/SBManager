@@ -9,23 +9,28 @@ class NewClient(forms.Form):
     port = forms.FloatField(initial=8080)
 
 class CatForm(forms.Form):
-    category = forms.CharField(max_length=100, label='Category', required=False)
+    name = forms.CharField(max_length=100, label='Category', required=False)
+    path = forms.CharField(max_length=100, label='Path', required=False)
 
 class CatFormSet(BaseFormSet):
     def clean(self):
         if any(self.errors):
             return
         categories = []
+        paths = []
         duplicates = False
 
         for form in self.forms:
             if form.cleaned_data:
                 category = form.cleaned_data['category']
+                path = form.cleaned_data['path']
 
-                if category:
+                if category and path:
                     if category in categories:
                         duplicates = True
                     categories.append(category)
+                    paths.append(path)
+
 
 
                 if duplicates:

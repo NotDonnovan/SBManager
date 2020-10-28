@@ -1,4 +1,4 @@
-from .models import Seedbox
+from .models import Seedbox, Category
 import qbittorrentapi
 from hurry.filesize import size, alternative
 
@@ -60,6 +60,21 @@ def pull_categories(client):
         username=client.login,
         password=client.password
     )
+    categories = list(Category.objects.all().values_list('name', flat=True))
+    client_categories = list(qbt_client.torrents_categories())
+    new_categories = []
+
+    for category in client_categories:
+        if category in categories:
+            pass
+        else:
+            new_categories.append(Category(name=category))
+
+    if new_categories:
+        print('adding new cats')
+        Category.objects.bulk_create(new_categories)
+
+
 
 
 

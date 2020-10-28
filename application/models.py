@@ -15,4 +15,10 @@ class Seedbox(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=20, default='')
-    path = models.CharField(max_length=200, default='')
+    path = models.CharField(max_length=200, default='', blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'Categories'
