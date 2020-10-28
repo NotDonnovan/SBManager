@@ -30,26 +30,36 @@ def get_torrents():
     torrents = []
 
     for box in Seedbox.objects.all():
-        clients.append(
-            qbittorrentapi.Client(
+        clients.append({
+            box.name : qbittorrentapi.Client(
                 host=box.host,
-                port=int(box.port),
+                port=box.port,
                 username=box.login,
                 password=box.password)
+        }
         )
 
-    for client in clients:
-        for torrent in client.torrents_info():
-            torrents.append(
-                {'name': torrent.name,
-                 'state': status_rename(torrent.state),
-                 'progress': (torrent.progress * 100),
-                 'size': (size(torrent.size, system=alternative)),
-                 'ratio': (round(torrent.ratio, 2)),
-                 }
-            )
-
+    for client in range(len(clients)):
+        for obj in clients[client].values():
+            for torrent in obj.torrents_info():
+                torrents.append(
+                    {'name': torrent.name,
+                     'state': status_rename(torrent.state),
+                     'progress': (torrent.progress * 100),
+                     'size': (size(torrent.size, system=alternative)),
+                     'ratio': (round(torrent.ratio, 2)),
+                     'client': list(clients[client].keys())[0]
+                     }
+                )
     return torrents
+
+def pull_categories(client):
+    qbt_client = qbittorrentapi.Client(
+        host=client.host,
+        port=client.port,
+        username=client.login,
+        password=client.password
+    )
 
 
 

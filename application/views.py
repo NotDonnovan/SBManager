@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from .functions import status_rename, get_torrents
-from .forms import NewClient
-from .models import Seedbox
+from .functions import get_torrents
+from .forms import NewClient, CatForm, CatFormSet
+from .models import Seedbox, Category
 from django.views.generic.list import ListView
+from django.forms.formsets import formset_factory
 
 torrents = get_torrents()
 
@@ -28,7 +29,32 @@ def new_client(request):
             client = Seedbox(name=n, host=h, login=l, password=p, port=pt)
             client.save()
             return redirect("client_settings")
-        print(form.errors)
     else:
         form = NewClient()
     return render(request,'application/new_client.html', {'form': form})
+
+def category_settings(request):
+    FormSet = formset_factory(CatForm, formset=CatFormSet)
+    new_cats = []
+
+
+
+    if request.method == "POST":
+        form = FormSet(request.POST)
+
+        if form.is_valid():
+            for cat in form:
+                category = cat.cleaned_data.get('category')
+                new_cats.append(Category(name=category))
+
+            try:
+                with transaction.atomic():
+                    Category.objects.bulk_create(new_cats)
+                    return redirect("home", store=store)
+
+            except IntegrityError:
+                messages.error(request, 'Error')
+
+    else:
+        form = FormSet()
+    return render(request, 'application/categories.html', {'form': form})

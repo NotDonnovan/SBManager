@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views.home, name='index'),
     path('settings/clients', views.ClientSettings.as_view(), name='client_settings'),
     path('settings/add_client', views.new_client, name='new_client'),
+    path('settings/categories', views.category_settings, name='categories'),
 ]
