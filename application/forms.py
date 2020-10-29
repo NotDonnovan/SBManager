@@ -22,7 +22,7 @@ class CatFormSet(BaseFormSet):
 
         for form in self.forms:
             if form.cleaned_data:
-                category = form.cleaned_data['category']
+                category = form.cleaned_data['name']
                 path = form.cleaned_data['path']
 
                 if category and path:

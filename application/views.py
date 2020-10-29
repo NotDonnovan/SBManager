@@ -4,7 +4,7 @@ from .forms import NewClient, CatForm, CatFormSet
 from .models import Seedbox, Category
 from django.views.generic.list import ListView
 from django.forms.formsets import formset_factory
-
+from django.db import IntegrityError, transaction
 
 
 def home(request):
@@ -47,10 +47,11 @@ def category_settings(request):
         if form.is_valid():
             new_cats = []
             for cat in form:
-                category = cat.cleaned_data.get('category')
+                category = cat.cleaned_data.get('name')
+                path = cat.cleaned_data.get('path')
 
                 if category:
-                    new_cats.append(Category(name=category))
+                    new_cats.append(Category(name=category, path=path))
 
             try:
                 with transaction.atomic():

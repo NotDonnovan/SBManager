@@ -1,64 +1,71 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
 <script src="{% static 'js/jquery.formset.js' %}"></script>
-<div class="container">
+<form method="POST">
+    {% csrf_token %}
+    <div class="right"><button class="btn-small waves-effect waves-light offset-s4" style="background-color: #2C3531" type="submit">save
+    </button></div>
 
-    <a href="/settings/clients" class="black-text waves-effect btn-flat">Clients</a>&emsp;
-    <a class="black-text btn-flat disabled">Categories</a>
+    <div class="container">
 
-    <hr>
-</div>
-<br>
+        <a href="/settings/clients" class="black-text waves-effect btn-flat">Clients</a>&emsp;
+        <a class="black-text btn-flat disabled">Categories</a>
 
+        <hr>
+    </div>
+    <br>
 
-{{ form.management_form }}
+    {{ form.management_form }}
+    <div class="container">
+        {% for cat in form %}
 
-{% for cat in form %}
+        <div class="link-formset">
+            <div class="row">
 
-                <div class="link-formset">
+                <div class="input-field col s3 offset-s2">
+                    {{ cat.name }}{{cat.name.label_tag}}
 
-                    <div class="row">
-
-                        <div class="input-field col s6">
-                            {{ cat.name }}{{cat.name.label_tag}}
-
-                            {% if cat.name.errors %}
-                                {% for error in cat.name.errors %}
-                                    {{ error|escape }}
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-
-
-
-                        <div class="row">
-                            <div class="input-field col s5">
-                                {{ cat.path }}{{cat.path.label_tag}}
-                                {% if cat.path.errors %}
-                                {% for error in cat.path.errors %}
-                                {{ error|escape }}
-                                {% endfor %}
-                                {% endif %}
-                            </div>
-                            <div class="col s1">
-                                <br><br>
-                                <div class="DelLink"></div>
-                            </div>
-                        </div>
-
-                    </div>
-
+                    {% if cat.name.errors %}
+                    {% for error in cat.name.errors %}
+                    {{ error|escape }}
+                    {% endfor %}
+                    {% endif %}
                 </div>
 
-                {% endfor %}
 
 
+                <div class="row">
+                    <div class="input-field col s4">
+                        {{ cat.path }}{{cat.path.label_tag}}
+                        {% if cat.path.errors %}
+                        {% for error in cat.path.errors %}
+                        {{ error|escape }}
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col s1">
+                        <br><br>
+                        <div class="DelLink"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+        <div class="center AddLink"></div>
+    </div>
+
+</form>
 
 <script>
     $('.link-formset').formset({
-        addText: 'Add part',
-        deleteText: 'Remove',
+        addText: '( + )',
+        deleteText: '( - )',
         deleteContainerClass: 'DelLink',
         addContainerClass: 'AddLink',
     });
