@@ -7,8 +7,10 @@
         <table class="col s10 offset-s1 highlight">
             <thead>
             <tr>
+                <th class="center">Client</th>
+                <th></th>
                 <th>Name</th>
-                <th>Client</th>
+                <th>Category</th>
                 <th></th>
                 <th>Status</th>
                 <th>Ratio</th>
@@ -21,9 +23,14 @@
             {% for t in torrents %}
 
             <tr>
-
+                <td class="center"><a href="http://10.0.0.22:8080">{{t.client}}</a></td>
+                <td></td>
                 <td>{{t.name}}</td>
-                <td>{{t.client}}</td>
+                {% if t.category %}
+                <td>{{t.category}}</td>
+                {% else %}
+                <td><label>&emsp; NA</label></td>
+                {% endif %}
                 <td></td>
                 <td>{{t.state}}</td>
                 <td>{{t.ratio}}</td>

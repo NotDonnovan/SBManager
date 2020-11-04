@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<a href="/settings/devices" class="btn-floating btn-small" style="background-color: #2C3531"><i class="material-icons" >arrow_back</i></a>
+<br><br>
+<form method="POST" class="container">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col s12">
+            <div class="input-field col s6">
+                {{form.name.label_tag}}{{form.name}}
+            </div>
+
+            <div class="input-field col s6">
+                {{form.host.label_tag}}{{form.host}}
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+{% endblock %}

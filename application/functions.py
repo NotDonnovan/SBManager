@@ -48,7 +48,8 @@ def get_torrents():
                      'progress': (torrent.progress * 100),
                      'size': (size(torrent.size, system=alternative)),
                      'ratio': (round(torrent.ratio, 2)),
-                     'client': list(clients[client].keys())[0]
+                     'client': list(clients[client].keys())[0],
+                     'category': torrent.category
                      }
                 )
     return torrents

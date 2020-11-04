@@ -8,6 +8,11 @@ class NewClient(forms.Form):
     password = forms.CharField(max_length=100, widget=forms.PasswordInput)
     port = forms.FloatField(initial=8080)
 
+class NewDevice(forms.Form):
+    name = forms.CharField(max_length=20)
+    host = forms.GenericIPAddressField()
+    locat
+
 class CatForm(forms.Form):
     name = forms.CharField(max_length=100, label='Category', required=False)
     path = forms.CharField(max_length=100, label='Path', required=False)

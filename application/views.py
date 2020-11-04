@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .functions import get_torrents, pull_categories
-from .forms import NewClient, CatForm, CatFormSet
-from .models import Seedbox, Category
+from .forms import *
+from .models import *
 from django.views.generic.list import ListView
 from django.forms.formsets import formset_factory
 from django.db import IntegrityError, transaction
@@ -34,6 +34,19 @@ def new_client(request):
         form = NewClient()
     return render(request,'application/new_client.html', {'form': form})
 
+def new_device(request):
+    if request.method == "POST":
+        form = NewDevice(request.POST)
+        if form.is_valid():
+            n = form.cleaned_data['name']
+            h = form.cleaned_data['host']
+            device = Device(name=n, host=h)
+            device.save()
+            return redirect("device_settings")
+    else:
+        form = NewDevice()
+    return render(request,'application/new_device.html', {'form': form})
+
 def category_settings(request):
     FormSet = formset_factory(CatForm, formset=CatFormSet)
     current_cats = list(Category.objects.all())
@@ -57,7 +70,7 @@ def category_settings(request):
                 with transaction.atomic():
                     Category.objects.all().delete()
                     Category.objects.bulk_create(new_cats)
-                    return redirect("/")
+                    return redirect("categories")
 
             except IntegrityError:
                 messages.error(request, 'Error')
@@ -65,3 +78,7 @@ def category_settings(request):
     else:
         form = FormSet(initial=data)
     return render(request, 'application/categories.html', {'form': form})
+
+class DeviceSettings(ListView):
+    model = Device
+    template_name = 'application/devices.html'

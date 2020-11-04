@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<a href="/settings/clients" class="btn-floating btn-small" style="background-color: #2C3531"><i class="material-icons" >arrow_back</i></a>
 <br><br>
+
 <form method="POST" class="container">
     {% csrf_token %}
     <div class="row">
