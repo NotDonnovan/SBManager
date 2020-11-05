@@ -35,17 +35,38 @@ def new_client(request):
     return render(request,'application/new_client.html', {'form': form})
 
 def new_device(request):
+    FormSet = formset_factory(DirForm, formset=DirFormSet)
+    new_dirs = []
+
     if request.method == "POST":
         form = NewDevice(request.POST)
-        if form.is_valid():
+        formset = FormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
             n = form.cleaned_data['name']
             h = form.cleaned_data['host']
-            device = Device(name=n, host=h)
-            device.save()
-            return redirect("device_settings")
+            d = Device(name=n, host=h)
+            d.save()
+
+            for dir in formset:
+                path_name = dir.cleaned_data.get('path_name')
+                path = dir.cleaned_data.get('path')
+
+                if path_name and path:
+                    new_dirs.append(Directory(device=d, label=path_name, path=path))
+
+            try:
+                with transaction.atomic():
+                    Directory.objects.bulk_create(new_dirs)
+                    return redirect("devices")
+
+            except IntegrityError: #If the transaction failed
+                messages.error(request, 'Error')
+        print('formset errors: {}'.format(formset.errors))
+        print('form errors: {}'.format(form.errors))
     else:
         form = NewDevice()
-    return render(request,'application/new_device.html', {'form': form})
+        formset = FormSet()
+    return render(request,'application/new_device.html', {'form': form, 'formset': formset})
 
 def category_settings(request):
     FormSet = formset_factory(CatForm, formset=CatFormSet)
@@ -82,3 +103,6 @@ def category_settings(request):
 class DeviceSettings(ListView):
     model = Device
     template_name = 'application/devices.html'
+
+    def get_queryset(self):
+        return Device.objects.all()

@@ -12,7 +12,13 @@
 <br>
 
 <div class="row">
-
+        {% for device in device_list %}
+    <div class="offset-s1 col s2 card-panel center z-depth-3" style="background-color: #dcdbe1">
+        <br>
+        <a href="">{{device.name}}</a>
+        <br><br>
+    </div>
+    {% endfor %}
     <div class="offset-s1 col s2 card-panel center z-depth-3" style="background-color: #dcdbe1">
         <a href="/settings/add_device"><i class="material-icons medium">add_box</i></a>
     </div>

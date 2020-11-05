@@ -1,6 +1,12 @@
 from django import forms
 from django.forms.formsets import BaseFormSet
 
+status_choices = [
+    ('NO', 'Not ordered'),
+    ('PA', 'Part ordered'),
+    ('PD', 'Part delivered'),
+]
+
 class NewClient(forms.Form):
     name = forms.CharField(max_length=20)
     host = forms.GenericIPAddressField()
@@ -11,7 +17,49 @@ class NewClient(forms.Form):
 class NewDevice(forms.Form):
     name = forms.CharField(max_length=20)
     host = forms.GenericIPAddressField()
-    locat
+
+
+class DirForm(forms.Form):
+    path_name = forms.CharField(max_length=20, label='Path Name', required=False)
+    path = forms.CharField(max_length=200, label='Path',initial='/', required=False)
+
+class DirFormSet(BaseFormSet):
+    def clean(self):
+        if any(self.errors):
+            return
+        names = []
+        paths = []
+        duplicate_name = False
+        duplicate_path = False
+
+        for form in self.forms:
+            if form.cleaned_data:
+                path_name = form.cleaned_data['path_name']
+                path = form.cleaned_data['path']
+
+                if path_name and path:
+                    if path_name in names:
+                        duplicate_name = True
+                    if path in paths:
+                        duplicate_path = True
+                    names.append(path_name)
+                    paths.append(path)
+
+
+
+                if duplicate_name:
+                    raise forms.ValidationError(
+                        'Path names must be different',
+                        code='duplicates'
+                    )
+
+                if duplicate_path:
+                    raise forms.ValidationError(
+                        'Paths must be different',
+                        code='duplicates'
+                    )
+
+        return self.cleaned_data
 
 class CatForm(forms.Form):
     name = forms.CharField(max_length=100, label='Category', required=False)

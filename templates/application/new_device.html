@@ -1,23 +1,52 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<a href="/settings/devices" class="btn-floating btn-small" style="background-color: #2C3531"><i class="material-icons" >arrow_back</i></a>
-<br><br>
-<form method="POST" class="container">
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<form method="POST">
     {% csrf_token %}
-    <div class="row">
-        <div class="col s12">
-            <div class="input-field col s6">
+    <div class="right"><button class="btn-small waves-effect waves-light offset-s4" style="background-color: #2C3531" type="submit">save
+    </button></div>
+    <a href="/settings/devices" class="btn-floating btn-small" style="background-color: #2C3531"><i class="material-icons" >arrow_back</i></a>
+    <br><br>
+    <div  class="container">
+        <div class="row">
+
+            <div class="input-field col s8 offset-s2">
                 {{form.name.label_tag}}{{form.name}}
             </div>
 
-            <div class="input-field col s6">
-                {{form.host.label_tag}}{{form.host}}
+            <div class="input-field col s4 offset-s4">
+                {{form.host.label_tag}}{{form.host}}<br><br>
             </div>
 
+            {{ formset.management_form }}
+
+            {% for dir in formset %}
+            <div class="link-formset">
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ dir.path_name }}{{dir.path_name.label_tag}}
+                    </div>
+                    <div class="input-field col s5">
+                        {{ dir.path }}{{dir.path.label_tag}}
+                    </div>
+                    <div class=" col s1 DelLink" style="font-size: 13px;"><br><br></div>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="center AddLink" style="font-size: 13px;"></div>
         </div>
     </div>
 </form>
+
+<script>
+    $('.link-formset').formset({
+        addText: 'Add Directory',
+        deleteText: '( - )',
+        deleteContainerClass: 'DelLink',
+        addContainerClass: 'AddLink',
+    });
+</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

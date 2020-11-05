@@ -25,7 +25,12 @@ class Category(models.Model):
 
 class Device(models.Model):
     name = models.CharField(max_length=20, default='')
-    host = models.GenericIPAddressField()
+    host = models.GenericIPAddressField(default='')
+
+    def __str__(self):
+        return self.name
 
 class Directory(models.Model):
     device = models.ForeignKey('Device', related_name='location', on_delete=models.CASCADE)
+    label = models.CharField(max_length=20, default='')
+    path = models.CharField(max_length=200)
