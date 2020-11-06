@@ -1,11 +1,8 @@
 from django import forms
+from .functions import get_directories
 from django.forms.formsets import BaseFormSet
 
-status_choices = [
-    ('NO', 'Not ordered'),
-    ('PA', 'Part ordered'),
-    ('PD', 'Part delivered'),
-]
+path_choices = get_directories()
 
 class NewClient(forms.Form):
     name = forms.CharField(max_length=20)
@@ -63,7 +60,7 @@ class DirFormSet(BaseFormSet):
 
 class CatForm(forms.Form):
     name = forms.CharField(max_length=100, label='Category', required=False)
-    path = forms.CharField(max_length=100, label='Path', required=False)
+    path = forms.CharField(max_length=100, label='Path', required=False, widget=forms.Select(choices=path_choices))
 
 class CatFormSet(BaseFormSet):
     def clean(self):
@@ -78,13 +75,11 @@ class CatFormSet(BaseFormSet):
                 category = form.cleaned_data['name']
                 path = form.cleaned_data['path']
 
-                if category and path:
+                if category:
                     if category in categories:
                         duplicates = True
                     categories.append(category)
                     paths.append(path)
-
-
 
                 if duplicates:
                     raise forms.ValidationError(

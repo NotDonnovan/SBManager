@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
+<script src="{% static 'js/jquery.js' %}"></script>
 <script src="{% static 'js/jquery.formset.js' %}"></script>
 <form method="POST">
     {% csrf_token %}
@@ -19,6 +19,13 @@
 
     {{ form.management_form }}
     <div class="container">
+
+        {% if form.non_form_errors %}
+                    {% for error in form.non_form_errors %}
+                    <h6 class="center red-text"><i class="material-icons center prefix">error_outline</i><br>{{ error|escape }}<br><br></h6><br>
+                    {% endfor %}
+                {% endif %}
+
         {% for cat in form %}
 
         <div class="link-formset">

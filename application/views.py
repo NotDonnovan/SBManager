@@ -5,7 +5,7 @@ from .models import *
 from django.views.generic.list import ListView
 from django.forms.formsets import formset_factory
 from django.db import IntegrityError, transaction
-
+from django.contrib import messages
 
 def home(request):
     return render(request, 'application/index.html', {'torrents': get_torrents()})
@@ -73,13 +73,13 @@ def category_settings(request):
     current_cats = list(Category.objects.all())
     data = [{'name': c.name, 'path': c.path}
             for c in current_cats]
-
+    new_cats = []
 
     if request.method == "POST":
         form = FormSet(request.POST)
 
         if form.is_valid():
-            new_cats = []
+
             for cat in form:
                 category = cat.cleaned_data.get('name')
                 path = cat.cleaned_data.get('path')

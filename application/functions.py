@@ -1,4 +1,4 @@
-from .models import Seedbox, Category
+from .models import Seedbox, Category, Directory
 import qbittorrentapi
 from hurry.filesize import size, alternative
 
@@ -75,6 +75,10 @@ def pull_categories(client):
         print('adding new cats')
         Category.objects.bulk_create(new_categories)
 
+def get_directories():
+    dirs = list(Directory.objects.all().values_list('label',flat=True))
+    print(dirs)
+    return dirs
 
 
 
