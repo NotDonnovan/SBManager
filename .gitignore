@@ -1,5 +1,4 @@
 SBManager/.env
-SBManager/settings.py
 # Django #
 *.log
 *.pot

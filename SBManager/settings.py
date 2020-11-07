@@ -125,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    '/home/dpasc/PycharmProjects/SBManager/SBManager/static',
+    env('STATIC_DIR'),
 )
 
 
