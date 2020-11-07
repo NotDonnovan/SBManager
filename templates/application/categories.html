@@ -28,10 +28,10 @@
 
         {% for cat in form %}
 
-        <div class="link-formset">
+        <div class="category-formset">
             <div class="row">
 
-                <div class="input-field col s3 offset-s2">
+                <div class="input-field col s4 offset-s2">
                     {{ cat.name }}{{cat.name.label_tag}}
 
                     {% if cat.name.errors %}
@@ -69,11 +69,16 @@
 </form>
 
 <script>
-    $('.link-formset').formset({
+    $('.category-formset').formset({
         addText: '( + )',
         deleteText: '( - )',
         deleteContainerClass: 'DelLink',
         addContainerClass: 'AddLink',
+        hideLastAddForm: 'True',
+
+        added: function(newSel){
+            $('select').formSelect();
+        }
     });
 </script>
 
