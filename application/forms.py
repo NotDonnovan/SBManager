@@ -1,7 +1,7 @@
 from django import forms
 from .functions import get_directories
 from django.forms.formsets import BaseFormSet
-from .models import Seedbox
+from .models import Seedbox, Device
 
 
 class NewClient(forms.Form):
@@ -15,7 +15,6 @@ class EditClientForm(forms.ModelForm):
 
     class Meta:
         model = Seedbox
-        password = forms.CharField(max_length=100, widget=forms.PasswordInput)
 
         fields = [
             'name',
@@ -24,10 +23,23 @@ class EditClientForm(forms.ModelForm):
             'password',
             'port',
         ]
-  
+        widgets = {
+            'password': forms.TextInput(attrs={'type': 'password'}),
+        }
+
 class NewDevice(forms.Form):
     name = forms.CharField(max_length=20)
     host = forms.GenericIPAddressField()
+
+class EditDeviceForm(forms.ModelForm):
+
+    class Meta:
+        model = Device
+
+        fields = [
+            'name',
+            'host',
+        ]
 
 class DirForm(forms.Form):
     path_name = forms.CharField(max_length=20, label='Path Name', required=False)
@@ -74,6 +86,10 @@ class DirFormSet(BaseFormSet):
 class CatForm(forms.Form):
     name = forms.CharField(max_length=100, label='Category', required=False)
     path = forms.CharField(max_length=100, label='Path', required=False, widget=forms.Select(choices=get_directories()))
+
+    def __init__(self, *args, **kwargs):
+        super(CatForm, self).__init__(*args, **kwargs)
+        self.fields['path'] = forms.ChoiceField(choices=get_directories())
 
 class CatFormSet(BaseFormSet):
     def clean(self):

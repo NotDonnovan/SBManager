@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Seedbox(models.Model):
     name = models.CharField(max_length=20, default='')
     host = models.GenericIPAddressField()
@@ -11,7 +12,8 @@ class Seedbox(models.Model):
         return '{} ({})'.format(self.name, self.host)
 
     class Meta:
-        verbose_name_plural = 'Seedboxes'
+        verbose_name = 'Client'
+        verbose_name_plural = 'Clients'
 
 class Category(models.Model):
     name = models.CharField(max_length=20, default='')

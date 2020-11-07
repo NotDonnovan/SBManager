@@ -40,17 +40,31 @@
                 </div>
             </div>
             {% endfor %}
-            <div class="center AddLink" style="font-size: 13px;"></div>
+
         </div>
     </div>
+    <div class="center AddLink container" style="font-size: 13px;"></div>
+
 </form>
 
+{% if can_delete == False %}
+{% else %}
+<form action="{% url 'delete_device' device.id %}" method="post" style="display: inline;">
+    {% csrf_token %}
+    <br><br>
+    <div class="right"><button class="btn-floating btn-small" style="background-color: #cc2519"
+                               onclick="return confirm('Are you sure you want to delete this device?');">
+        <i class="material-icons">delete_forever</i>
+    </button></div>
+</form>
+{% endif %}
 <script>
     $('.link-formset').formset({
         addText: 'Add Directory',
         deleteText: '( - )',
         deleteContainerClass: 'DelLink',
         addContainerClass: 'AddLink',
+        hideLastAddForm: 'True',
     });
 </script>
 

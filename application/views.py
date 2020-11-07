@@ -3,10 +3,11 @@ from .functions import get_torrents, pull_categories
 from .forms import *
 from .models import *
 from django.views.generic.list import ListView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, DeleteView
 from django.forms.formsets import formset_factory
 from django.db import IntegrityError, transaction
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 def home(request):
     return render(request, 'application/index.html', {'torrents': get_torrents()})
@@ -33,12 +34,20 @@ def new_client(request):
             return redirect("client_settings")
     else:
         form = NewClient()
-    return render(request,'application/new_client.html', {'form': form})
+    return render(request,'application/new_client.html', {'form': form, 'can_delete': False})
 
 class EditClient(UpdateView):
     model = Seedbox
     form_class = EditClientForm
     template_name = 'application/new_client.html'
+
+    def get_success_url(self):
+        return reverse_lazy("client_settings")
+
+class DelClient(DeleteView):
+    model = Seedbox
+    def get_success_url(self):
+        return reverse_lazy("client_settings")
 
 def new_device(request):
     FormSet = formset_factory(DirForm, formset=DirFormSet)
@@ -72,10 +81,57 @@ def new_device(request):
     else:
         form = NewDevice()
         formset = FormSet()
-    return render(request,'application/new_device.html', {'form': form, 'formset': formset})
+    return render(request,'application/new_device.html', {'form': form, 'formset': formset, 'can_delete': False})
+
+class EditDevice(UpdateView):
+    model = Device
+    form_class = EditDeviceForm
+    FormSet = formset_factory(DirForm, formset=DirFormSet)
+    template_name = 'application/new_device.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(EditDevice, self).get_context_data(**kwargs)
+        current_dirs = Directory.objects.filter(device=self.get_object())
+        dir_data = [{'path_name': direc.label, 'path': direc.path}
+                     for direc in current_dirs]
+        context['formset'] = self.FormSet(initial=dir_data)
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        d = Device.objects.get(pk=self.get_object().id)
+        if request.method == 'POST':
+            formset = self.FormSet(request.POST)
+
+            if formset.is_valid():
+
+                new_dirs = []
+
+                for form in formset:
+                    path_name = form.cleaned_data.get('path_name')
+                    path = form.cleaned_data.get('path')
+
+                    if path_name and path:
+                        new_dirs.append(Directory(device=d, label=path_name, path=path))
+                try:
+                    with transaction.atomic():
+                        Directory.objects.filter(device=d).delete()
+                        Directory.objects.bulk_create(new_dirs)
+
+                except IntegrityError:  # If the transaction failed
+                    messages.error(request, 'Error')
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy("devices")
+
+class DelDevice(DeleteView):
+    model = Device
+    def get_success_url(self):
+        return reverse_lazy("devices")
 
 def category_settings(request):
-    get_directories()
+
     FormSet = formset_factory(CatForm, formset=CatFormSet)
     current_cats = list(Category.objects.all())
     data = [{'name': c.name, 'path': c.path}
