@@ -125,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    '/mnt/c/Users/Dpasc/Desktop/Donnovan/Projects/SBManager/SBManager/static',
+    '/home/dpasc/PycharmProjects/SBManager/SBManager/static',
 )
 
 

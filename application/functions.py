@@ -45,7 +45,7 @@ def get_torrents():
                 torrents.append(
                     {'name': torrent.name,
                      'state': status_rename(torrent.state),
-                     'progress': (torrent.progress * 100),
+                     'progress': (round(torrent.progress * 100)),
                      'size': (size(torrent.size, system=alternative)),
                      'ratio': (round(torrent.ratio, 2)),
                      'client': list(clients[client].keys())[0],

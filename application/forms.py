@@ -1,6 +1,7 @@
 from django import forms
 from .functions import get_directories
 from django.forms.formsets import BaseFormSet
+from .models import Seedbox
 
 
 class NewClient(forms.Form):
@@ -10,10 +11,23 @@ class NewClient(forms.Form):
     password = forms.CharField(max_length=100, widget=forms.PasswordInput)
     port = forms.FloatField(initial=8080)
 
+class EditClientForm(forms.ModelForm):
+
+    class Meta:
+        model = Seedbox
+        password = forms.CharField(max_length=100, widget=forms.PasswordInput)
+
+        fields = [
+            'name',
+            'host',
+            'login',
+            'password',
+            'port',
+        ]
+  
 class NewDevice(forms.Form):
     name = forms.CharField(max_length=20)
     host = forms.GenericIPAddressField()
-
 
 class DirForm(forms.Form):
     path_name = forms.CharField(max_length=20, label='Path Name', required=False)
@@ -87,3 +101,4 @@ class CatFormSet(BaseFormSet):
                     )
 
         return self.cleaned_data
+

@@ -3,6 +3,7 @@ from .functions import get_torrents, pull_categories
 from .forms import *
 from .models import *
 from django.views.generic.list import ListView
+from django.views.generic.edit import UpdateView
 from django.forms.formsets import formset_factory
 from django.db import IntegrityError, transaction
 from django.contrib import messages
@@ -33,6 +34,11 @@ def new_client(request):
     else:
         form = NewClient()
     return render(request,'application/new_client.html', {'form': form})
+
+class EditClient(UpdateView):
+    model = Seedbox
+    form_class = EditClientForm
+    template_name = 'application/new_client.html'
 
 def new_device(request):
     FormSet = formset_factory(DirForm, formset=DirFormSet)
