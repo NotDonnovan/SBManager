@@ -1,4 +1,4 @@
-from .models import Seedbox, Category, Directory
+from .models import Seedbox, Category, Directory, Device
 import qbittorrentapi
 from hurry.filesize import size, alternative
 
@@ -76,8 +76,23 @@ def pull_categories(client):
         Category.objects.bulk_create(new_categories)
 
 def get_directories():
-    dirs = list(Directory.objects.all().values_list('label',flat=True))
-    print(dirs)
+    dirs = []
+    d = []
+
+    for dev in list(Directory.objects.all().values_list('device', flat=True)):
+        devname = Device.objects.get(pk=dev).name
+        d.append(devname)
+        for dirname in list(Directory.objects.all().values_list('label',flat=True)):
+            if dirname in Directory.objects.filter(device=5).values_list('label',flat=True):
+                d.append(dirname)
+                d = tuple(d)
+                dirs.append(d)
+                d = []
+                break
+
+
+
+
     return dirs
 
 

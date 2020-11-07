@@ -69,6 +69,7 @@ def new_device(request):
     return render(request,'application/new_device.html', {'form': form, 'formset': formset})
 
 def category_settings(request):
+    get_directories()
     FormSet = formset_factory(CatForm, formset=CatFormSet)
     current_cats = list(Category.objects.all())
     data = [{'name': c.name, 'path': c.path}
