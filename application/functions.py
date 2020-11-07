@@ -76,23 +76,27 @@ def pull_categories(client):
         Category.objects.bulk_create(new_categories)
 
 def get_directories():
-    dirs = []
+    dirs = [('None', 'None')]
     d = []
-
+    used = {}
     for dev in list(Directory.objects.all().values_list('device', flat=True)):
         devname = Device.objects.get(pk=dev).name
-        d.append(devname)
         for dirname in list(Directory.objects.all().values_list('label',flat=True)):
-            if dirname in Directory.objects.filter(device=5).values_list('label',flat=True):
-                d.append(dirname)
-                d = tuple(d)
-                dirs.append(d)
-                d = []
-                break
+            if devname in list(used.keys()):
+                pass
+            else:
+                used[devname] = []
 
-
-
-
+            if dirname in Directory.objects.filter(device=dev).values_list('label',flat=True):
+                if dirname in used[devname]:
+                    pass
+                else:
+                    used[devname].append(dirname)
+                    d.append(devname)
+                    d.append('{} | {}'.format(devname, dirname))
+                    d = tuple(d)
+                    dirs.append(d)
+                    d = []
     return dirs
 
 

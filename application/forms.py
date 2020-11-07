@@ -2,7 +2,6 @@ from django import forms
 from .functions import get_directories
 from django.forms.formsets import BaseFormSet
 
-path_choices = get_directories()
 
 class NewClient(forms.Form):
     name = forms.CharField(max_length=20)
@@ -60,7 +59,7 @@ class DirFormSet(BaseFormSet):
 
 class CatForm(forms.Form):
     name = forms.CharField(max_length=100, label='Category', required=False)
-    path = forms.CharField(max_length=100, label='Path', required=False, widget=forms.Select(choices=path_choices))
+    path = forms.CharField(max_length=100, label='Path', required=False, widget=forms.Select(choices=get_directories()))
 
 class CatFormSet(BaseFormSet):
     def clean(self):
