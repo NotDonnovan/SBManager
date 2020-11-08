@@ -41,7 +41,7 @@ def get_torrents():
 
     for client in range(len(clients)):
         for obj in clients[client].values():
-            for torrent in obj.torrents_info():
+            for torrent in obj.torrents_info(sort='progress', reverse=True):
                 torrents.append(
                     {'name': torrent.name,
                      'state': status_rename(torrent.state),
