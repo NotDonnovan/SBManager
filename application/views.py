@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .functions import get_torrents, pull_categories
+from .functions import get_torrents, pull_categories, get_save_location
 from .forms import *
 from .models import *
 from django.views.generic.list import ListView
@@ -29,6 +29,8 @@ def new_client(request):
             p = form.cleaned_data['password']
             pt = form.cleaned_data['port']
             client = Seedbox(name=n, host=h, login=l, password=p, port=int(pt))
+            save_loc = get_save_location(client)
+            client.save_loc = save_loc
             client.save()
             pull_categories(client)
             return redirect("client_settings")

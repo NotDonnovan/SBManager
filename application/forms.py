@@ -11,8 +11,12 @@ class NewClient(forms.Form):
     password = forms.CharField(max_length=100, widget=forms.PasswordInput)
     port = forms.FloatField(initial=8080)
 
-class EditClientForm(forms.ModelForm):
 
+class EditClientForm(forms.ModelForm):
+    save_loc = forms.CharField(max_length=200, initial='/',label='Save Location',
+                               widget=forms.TextInput(attrs={'class': 'tooltipped',
+                                                             'data-position': 'top',
+                                                             'data-tooltip': 'Where does this client save its downloads?'}))
     class Meta:
         model = Seedbox
 
@@ -22,6 +26,7 @@ class EditClientForm(forms.ModelForm):
             'login',
             'password',
             'port',
+            'save_loc',
         ]
         widgets = {
             'password': forms.TextInput(attrs={'type': 'password'}),

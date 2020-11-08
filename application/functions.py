@@ -99,6 +99,13 @@ def get_directories():
                     d = []
     return dirs
 
-
+def get_save_location(client):
+    qbt_client = qbittorrentapi.Client(
+        host=client.host,
+        port=client.port,
+        username=client.login,
+        password=client.password
+    )
+    return(qbt_client.app.defaultSavePath)
 
 

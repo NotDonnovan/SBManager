@@ -7,6 +7,7 @@ class Seedbox(models.Model):
     login = models.CharField(max_length=100, default='admin')
     password = models.CharField(max_length=100, default='')
     port = models.IntegerField(default=8080)
+    save_loc = models.CharField(max_length=200, default='/')
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.host)
