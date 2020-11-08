@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .functions import get_torrents, pull_categories, get_save_location
 from .forms import *
 from .models import *
+from .transfer.ssh import remote_to_local
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, DeleteView
 from django.forms.formsets import formset_factory
