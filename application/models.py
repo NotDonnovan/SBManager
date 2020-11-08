@@ -37,3 +37,7 @@ class Directory(models.Model):
     device = models.ForeignKey('Device', related_name='location', on_delete=models.CASCADE)
     label = models.CharField(max_length=20, default='')
     path = models.CharField(max_length=200)
+
+class MoveQueue(models.Model):
+    filename = models.CharField(max_length=200, default='')
+    category = models.CharField(max_length=20, default='')

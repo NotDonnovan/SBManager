@@ -1,10 +1,20 @@
-from background_task import background
-import subprocess
-from django.core.management import call_command
 from time import sleep
+from .functions import get_torrents
+from .models import MoveQueue
 
-class BackgroundTasks:
-    def test_task():
-        while 1:
-            print('test')
-            sleep(3)
+
+def check_finished_download():
+    while True:
+        new_files = []
+        torrents = get_torrents()
+        queue = MoveQueue.objects.all.values_list('filename', flat=True)
+
+        for t in torrents:
+            cat, name, state = t['category'], t['name'], t['state']
+            if state == 'Complete':
+                if name not in queue:
+                    new_files.append(MoveQueue(filename=name, category=cat))
+
+
+
+        sleep(30)

@@ -10,13 +10,10 @@ from django.core.management import call_command
 from .forms import *
 from .functions import get_torrents, pull_categories, get_save_location
 from .models import *
-from .tasks import BackgroundTasks
 
 
 def home(request):
     #remote_to_local(Seedbox.objects.get(pk=13),'/home/dpasc/testing')
-    BackgroundTasks.test_task()
-    call_command('process_tasks')
     return render(request, 'application/index.html', {'torrents': get_torrents()})
 
 class ClientSettings(ListView):

@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from .tasks import check_finished_download
+import threading
 
 urlpatterns = [
     path('', views.home, name='index'),
@@ -15,3 +17,6 @@ urlpatterns = [
 
 
 ]
+#check_finished_download()
+#b = threading.Thread(name='bg', target=check_finished_download)
+#b.start()
