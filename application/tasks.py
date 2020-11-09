@@ -1,6 +1,8 @@
 from time import sleep
 from .functions import get_torrents
-from .models import MoveQueue, Category
+from .models import MoveQueue, Category, Directory
+
+categories = Category.objects.all()
 
 
 def check_finished_download():
@@ -8,10 +10,8 @@ def check_finished_download():
         new_files = []
         torrents = get_torrents()
         queue = MoveQueue.objects.all().values_list('filename', flat=True)
-
         for t in torrents:
             cat, name, prog = t['category'], t['name'], t['progress']
-            categories = Category.objects.all()
             if prog == 100 and name not in queue:
                 for c in categories:
                     if c.name == cat and c.path != 'None':
@@ -24,5 +24,11 @@ def check_finished_download():
         sleep(60)
 
 def move_downloads():
+    paths = Directory.objects.all()
+
+    for c in categories:
+        for d in paths:
+            if d.device.name == c.path:
+                print('true')
     for dl in MoveQueue.objects.all():
         print(dl.filename)

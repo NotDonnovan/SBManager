@@ -18,5 +18,5 @@ urlpatterns = [
 
 ]
 #check_finished_download()
-b = threading.Thread(name='Check downloads', target=check_finished_download)
-b.start()
+#b = threading.Thread(name='Check downloads', target=check_finished_download)
+#b.start()
