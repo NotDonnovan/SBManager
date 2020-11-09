@@ -92,11 +92,12 @@ def get_directories():
                     pass
                 else:
                     used[devname].append(dirname)
-                    d.append(devname)
+                    d.append(f'{dirname} | {devname}')
                     d.append('{} | {}'.format(devname, dirname))
                     d = tuple(d)
                     dirs.append(d)
                     d = []
+
     return dirs
 
 def get_save_location(client):

@@ -151,10 +151,15 @@ def category_settings(request):
 
             for cat in form:
                 category = cat.cleaned_data.get('name')
-                path = cat.cleaned_data.get('path')
+                path_dev = cat.cleaned_data.get('path')
 
-                if category:
-                    new_cats.append(Category(name=category, path=path))
+                if path_dev != 'None':
+                    device = path_dev.split(" | ")[1]
+
+                if category and path_dev != 'None':
+                    new_cats.append(Category(device=Device.objects.get(name=device), name=category, path=path_dev))
+                if category and path_dev == 'None':
+                    new_cats.append(Category(name=category, path=path_dev))
 
             try:
                 with transaction.atomic():

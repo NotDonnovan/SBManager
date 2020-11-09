@@ -18,6 +18,7 @@ class Seedbox(models.Model):
 
 
 class Category(models.Model):
+    device = models.ForeignKey('Device', related_name='category', on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=20, default='')
     path = models.CharField(max_length=200, default='None', blank=True)
 

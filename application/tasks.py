@@ -23,12 +23,16 @@ def check_finished_download():
             move_downloads()
         sleep(60)
 
+
 def move_downloads():
     paths = Directory.objects.all()
+    queue = MoveQueue.objects.all()
 
     for c in categories:
-        for d in paths:
-            if d.device.name == c.path:
-                print('true')
+        for file in queue:
+            if file.category == c.name:
+                for p in paths:
+                    if c.device == p.device:
+                        print(f'{file.filename} will be moved to {c.path.split(" | ")[1]}s {c.name} folder')
     for dl in MoveQueue.objects.all():
-        print(dl.filename)
+        pass

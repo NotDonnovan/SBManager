@@ -57,7 +57,6 @@ class DirFormSet(BaseFormSet):
         names = []
         paths = []
         duplicate_name = False
-        duplicate_path = False
 
         for form in self.forms:
             if form.cleaned_data:
@@ -67,12 +66,8 @@ class DirFormSet(BaseFormSet):
                 if path_name and path:
                     if path_name in names:
                         duplicate_name = True
-                    if path in paths:
-                        duplicate_path = True
                     names.append(path_name)
                     paths.append(path)
-
-
 
                 if duplicate_name:
                     raise forms.ValidationError(
@@ -80,11 +75,6 @@ class DirFormSet(BaseFormSet):
                         code='duplicates'
                     )
 
-                if duplicate_path:
-                    raise forms.ValidationError(
-                        'Paths must be different',
-                        code='duplicates'
-                    )
 
         return self.cleaned_data
 
@@ -122,4 +112,5 @@ class CatFormSet(BaseFormSet):
                     )
 
         return self.cleaned_data
+
 
