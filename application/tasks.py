@@ -1,9 +1,9 @@
 from time import sleep
 from .functions import get_torrents
 from .models import MoveQueue, Category, Directory
-
+from .transfer.ssh import remote_to_local
 categories = Category.objects.all()
-
+from .models import Seedbox
 
 def check_finished_download():
     while True:
@@ -15,7 +15,7 @@ def check_finished_download():
             if prog == 100 and name not in queue:
                 for c in categories:
                     if c.name == cat and c.path != 'None':
-                        new_files.append(MoveQueue(filename=name, category=cat))
+                        new_files.append(MoveQueue(filename=name, category=cat, client=Seedbox.objects.get(name=t['client'])))
 
         MoveQueue.objects.bulk_create(new_files)
 
@@ -34,5 +34,3 @@ def move_downloads():
                 for p in paths:
                     if c.device == p.device:
                         print(f'{file.filename} will be moved to {c.path.split(" | ")[1]}s {c.name} folder')
-    for dl in MoveQueue.objects.all():
-        pass
