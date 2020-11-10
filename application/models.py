@@ -52,7 +52,7 @@ class Directory(models.Model):
 class MoveQueue(models.Model):
     client = models.ForeignKey('Seedbox', related_name='queue', on_delete=models.CASCADE, blank=True, null=True)
     filename = models.CharField(max_length=200, default='')
-    category = models.CharField(max_length=20, default='')
+    category = models.ForeignKey('Category', related_name='queue_cat', on_delete=models.CASCADE, blank=True, null=True)
 
 
     def __str__(self):

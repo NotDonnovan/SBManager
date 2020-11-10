@@ -15,7 +15,7 @@ def check_finished_download():
             if prog == 100 and name not in queue:
                 for c in categories:
                     if c.name == cat and c.path != 'None':
-                        new_files.append(MoveQueue(filename=name, category=cat, client=Seedbox.objects.get(name=t['client'])))
+                        new_files.append(MoveQueue(filename=name, category=Category.objects.get(name=cat), client=Seedbox.objects.get(name=t['client'])))
 
         MoveQueue.objects.bulk_create(new_files)
 
@@ -28,9 +28,5 @@ def move_downloads():
     paths = Directory.objects.all()
     queue = MoveQueue.objects.all()
 
-    for c in categories:
-        for file in queue:
-            if file.category == c.name:
-                for p in paths:
-                    if c.device == p.device:
-                        print(f'{file.filename} will be moved to {c.path.split(" | ")[1]}s {c.name} folder')
+    for file in queue:
+        print(f'{file.filename} will be moved to {file.category.path.split(" | ")[1]}s {file.category.name} folder')
