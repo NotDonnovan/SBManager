@@ -32,6 +32,7 @@ class Category(models.Model):
 class Device(models.Model):
     name = models.CharField(max_length=20, default='')
     host = models.GenericIPAddressField(default='')
+    type = models.CharField(max_length=20, default='Local')
 
     def __str__(self):
         return self.name
@@ -54,10 +55,19 @@ class MoveQueue(models.Model):
     filename = models.CharField(max_length=200, default='')
     category = models.ForeignKey('Category', related_name='queue_cat', on_delete=models.CASCADE, blank=True, null=True)
 
-
     def __str__(self):
         return self.filename
 
     class Meta:
         verbose_name = 'Queue'
         verbose_name_plural = 'Queue'
+
+
+class Moved(models.Model):
+    filename = models.CharField(max_length=200, default='')
+
+    def __str__(self):
+        return self.filename
+
+    class Meta:
+        verbose_name_plural = 'Moved'

@@ -2,11 +2,11 @@ from time import sleep
 from .functions import get_torrents
 from .models import MoveQueue, Category, Directory
 from .transfer.ssh import remote_to_local
-categories = Category.objects.all()
 from .models import Seedbox
 
 def check_finished_download():
     while True:
+        categories = Category.objects.all()
         new_files = []
         torrents = get_torrents()
         queue = MoveQueue.objects.all().values_list('filename', flat=True)
@@ -25,7 +25,6 @@ def check_finished_download():
 
 
 def move_downloads():
-    paths = Directory.objects.all()
     queue = MoveQueue.objects.all()
 
     for file in queue:

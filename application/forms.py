@@ -33,8 +33,16 @@ class EditClientForm(forms.ModelForm):
         }
 
 class NewDevice(forms.Form):
+    transfer_types = [
+        ('local', 'Local'),
+        ('ssh', 'SSH'),
+        ('smb', 'SMB')
+        ('ftp', 'FTP'),
+    ]
+
     name = forms.CharField(max_length=20)
     host = forms.GenericIPAddressField()
+    type = forms.CharField(max_length=100, widget=forms.Select(choices=transfer_types))
 
 class EditDeviceForm(forms.ModelForm):
 
