@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<script src="{% static 'js/jquery.js' %}"></script>
 <script src="{% static 'js/jquery.formset.js' %}"></script>
 <form method="POST">
     {% csrf_token %}
@@ -17,6 +18,11 @@
 
             <div class="input-field col s4 offset-s4">
                 {{form.host.label_tag}}{{form.host}}<br><br>
+            </div>
+
+            <div class="input-field col s4 offset-s4">
+                {{form.type}}{{form.type.label_tag}}
+                <br><br>
             </div>
 
             {{ formset.management_form }}

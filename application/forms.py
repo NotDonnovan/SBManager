@@ -3,6 +3,12 @@ from .functions import get_directories
 from django.forms.formsets import BaseFormSet
 from .models import Seedbox, Device
 
+transfer_types = [
+    ('Local', 'Local'),
+    ('ssh', 'SSH'),
+    ('smb', 'SMB'),
+    ('ftp', 'FTP'),
+]
 
 class NewClient(forms.Form):
     name = forms.CharField(max_length=20)
@@ -33,16 +39,11 @@ class EditClientForm(forms.ModelForm):
         }
 
 class NewDevice(forms.Form):
-    transfer_types = [
-        ('local', 'Local'),
-        ('ssh', 'SSH'),
-        ('smb', 'SMB')
-        ('ftp', 'FTP'),
-    ]
 
     name = forms.CharField(max_length=20)
     host = forms.GenericIPAddressField()
-    type = forms.CharField(max_length=100, widget=forms.Select(choices=transfer_types))
+    type = forms.CharField(max_length=100,label='Type', widget=forms.Select(choices=transfer_types))
+
 
 class EditDeviceForm(forms.ModelForm):
 
@@ -52,11 +53,15 @@ class EditDeviceForm(forms.ModelForm):
         fields = [
             'name',
             'host',
+            'type',
         ]
+        widgets = {
+            'type': forms.Select(choices=transfer_types),
+        }
 
 class DirForm(forms.Form):
     path_name = forms.CharField(max_length=20, label='Path Name', required=False)
-    path = forms.CharField(max_length=200, label='Path',initial='/', required=False)
+    path = forms.CharField(max_length=200, label='Path', initial='/', required=False)
 
 class DirFormSet(BaseFormSet):
     def clean(self):

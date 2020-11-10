@@ -33,6 +33,8 @@ class Device(models.Model):
     name = models.CharField(max_length=20, default='')
     host = models.GenericIPAddressField(default='')
     type = models.CharField(max_length=20, default='Local')
+    user = models.CharField(max_length=20, default='')
+    password = models.CharField(max_length=100, default='')
 
     def __str__(self):
         return self.name
