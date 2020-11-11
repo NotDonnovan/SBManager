@@ -16,6 +16,7 @@ class NewClient(forms.Form):
     login = forms.CharField(max_length=100,initial='admin')
     password = forms.CharField(max_length=100, widget=forms.PasswordInput)
     port = forms.FloatField(initial=8080)
+    user = forms.CharField(max_length=20, label='User (SSH)')
 
 
 class EditClientForm(forms.ModelForm):
@@ -33,6 +34,7 @@ class EditClientForm(forms.ModelForm):
             'password',
             'port',
             'save_loc',
+            'user'
         ]
         widgets = {
             'password': forms.TextInput(attrs={'type': 'password'}),
@@ -42,7 +44,8 @@ class NewDevice(forms.Form):
 
     name = forms.CharField(max_length=20)
     host = forms.GenericIPAddressField()
-    type = forms.CharField(max_length=100,label='Type', widget=forms.Select(choices=transfer_types))
+    #type = forms.CharField(max_length=100,label='Type', widget=forms.Select(choices=transfer_types), initial='ssh')
+    user = forms.CharField(max_length=20)
 
 
 class EditDeviceForm(forms.ModelForm):
@@ -54,9 +57,11 @@ class EditDeviceForm(forms.ModelForm):
             'name',
             'host',
             'type',
+            'user',
         ]
         widgets = {
             'type': forms.Select(choices=transfer_types),
+
         }
 
 class DirForm(forms.Form):

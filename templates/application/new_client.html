@@ -9,9 +9,10 @@
     </button></div>
     <a href="/settings/clients" class="btn-floating btn-small" style="background-color: #2C3531"><i class="material-icons" >arrow_back</i></a>
     <br><br>
-    <div class="row">
-        <div class="col s12">
-            <div class="input-field col s6 offset-s3 center">
+    <div class="container">
+        <div class="row">
+
+            <div class="input-field col s8 offset-s2">
                 {{form.name.label_tag}}{{form.name}}
                 <br><br>
             </div>
@@ -23,21 +24,24 @@
 
                 <div class="input-field col s4 offset-s2">
                     {{form.login.label_tag}}{{form.login}}
-                    <br><br>
+
                 </div>
                 <div class="input-field col s4">
                     {{form.password.label_tag}}{{form.password}}
-                    <br><br>
                 </div>
 
             </div>
-            <div class="input-field col s2 offset-s5">
+            <div class="input-field col s4 offset-s4">
                 {{form.port.label_tag}}{{form.port}}
                 <br><br>
             </div>
             <div class="input-filed col s6 offset-s3">
                 {{form.save_loc.label_tag}}{{form.save_loc}}
+                <br><br>
+            </div>
 
+            <div class="input-field col s4 offset-s4">
+                {{form.user.label_tag}}{{form.user}}
             </div>
         </div>
     </div>

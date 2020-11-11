@@ -8,6 +8,7 @@ class Seedbox(models.Model):
     password = models.CharField(max_length=100, default='')
     port = models.IntegerField(default=8080)
     save_loc = models.CharField(max_length=200, default='/')
+    user = models.CharField(max_length=20, default='')
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.host)
@@ -32,9 +33,8 @@ class Category(models.Model):
 class Device(models.Model):
     name = models.CharField(max_length=20, default='')
     host = models.GenericIPAddressField(default='')
-    type = models.CharField(max_length=20, default='Local')
+    type = models.CharField(max_length=20, default='ssh')
     user = models.CharField(max_length=20, default='')
-    password = models.CharField(max_length=100, default='')
 
     def __str__(self):
         return self.name
@@ -64,6 +64,15 @@ class MoveQueue(models.Model):
         verbose_name = 'Queue'
         verbose_name_plural = 'Queue'
 
+
+class Moving(models.Model):
+    filename = models.CharField(max_length=200, default='')
+
+    def __str__(self):
+        return self.filename
+
+    class Meta:
+        verbose_name_plural = 'Moving'
 
 class Moved(models.Model):
     filename = models.CharField(max_length=200, default='')

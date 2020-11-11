@@ -12,6 +12,10 @@ from .functions import get_torrents, pull_categories, get_save_location
 from .models import *
 
 
+
+
+
+
 def home(request):
     #remote_to_local(Seedbox.objects.get(pk=13),'/home/dpasc/testing')
     return render(request, 'application/index.html', {'torrents': get_torrents()})
@@ -65,7 +69,8 @@ def new_device(request):
         if form.is_valid() and formset.is_valid():
             n = form.cleaned_data['name']
             h = form.cleaned_data['host']
-            d = Device(name=n, host=h)
+            u = form.cleaned_data['User (SSH)']
+            d = Device(name=n, host=h, user=u)
             d.save()
 
             for dir in formset:

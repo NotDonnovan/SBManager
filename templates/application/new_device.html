@@ -20,9 +20,11 @@
                 {{form.host.label_tag}}{{form.host}}<br><br>
             </div>
 
-            <div class="input-field col s4 offset-s4">
-                {{form.type}}{{form.type.label_tag}}
-                <br><br>
+
+            <div class="row">
+                <div class="input-field col s6 offset-s3">
+                    {{form.user}}{{form.user.label_tag}}
+                </div>
             </div>
 
             {{ formset.management_form }}
@@ -36,7 +38,7 @@
             {% for dir in formset %}
             <div class="link-formset">
                 <div class="row">
-                    <div class="input-field col s6">
+                    <div class="input-field col s5 offset-s1">
                         {{ dir.path_name }}{{dir.path_name.label_tag}}
                     </div>
                     <div class="input-field col s5">
