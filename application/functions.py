@@ -1,4 +1,4 @@
-from .models import Seedbox, Category, Directory, Device
+from .models import Seedbox, Category, Directory, Device, Torrent
 import qbittorrentapi
 from hurry.filesize import size, alternative
 
@@ -42,6 +42,16 @@ def get_torrents():
     for client in range(len(clients)):
         for obj in clients[client].values():
             for torrent in obj.torrents_info(sort='progress', reverse=True):
+                if torrent.name not in Torrent.objects.all().values_list('name', flat=True):
+                    t = Torrent(name=torrent.name,
+                                state=status_rename(torrent.state),
+                                progress=(round(torrent.progress * 100)),
+                                size=(size(torrent.size, system=alternative)),
+                                ratio=(round(torrent.ratio, 2)),
+                                client=Seedbox.objects.get(name=list(clients[client].keys())[0]),
+                                category=Category.objects.get(name=torrent.category)
+                                )
+                    t.save()
                 torrents.append(
                     {'name': torrent.name,
                      'state': status_rename(torrent.state),
