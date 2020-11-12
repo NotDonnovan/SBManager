@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.forms.formsets import formset_factory
@@ -6,19 +5,15 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView, DeleteView
 from django.views.generic.list import ListView
-from django.core.management import call_command
 from .forms import *
 from .functions import get_torrents, pull_categories, get_save_location
 from .models import *
 
 
-
-
-
-
 def home(request):
-    #remote_to_local(Seedbox.objects.get(pk=13),'/home/dpasc/testing')
+    # remote_to_local(Seedbox.objects.get(pk=13),'/home/dpasc/testing')
     return render(request, 'application/index.html', {'torrents': get_torrents()})
+
 
 class ClientSettings(ListView):
     model = Seedbox
@@ -26,6 +21,7 @@ class ClientSettings(ListView):
 
     def get_queryset(self):
         return Seedbox.objects.all()
+
 
 def new_client(request):
     if request.method == "POST":
@@ -44,7 +40,8 @@ def new_client(request):
             return redirect("client_settings")
     else:
         form = NewClient()
-    return render(request,'application/new_client.html', {'form': form, 'can_delete': False})
+    return render(request, 'application/new_client.html', {'form': form, 'can_delete': False})
+
 
 class EditClient(UpdateView):
     model = Seedbox
@@ -54,10 +51,13 @@ class EditClient(UpdateView):
     def get_success_url(self):
         return reverse_lazy("client_settings")
 
+
 class DelClient(DeleteView):
     model = Seedbox
+
     def get_success_url(self):
         return reverse_lazy("client_settings")
+
 
 def new_device(request):
     FormSet = formset_factory(DirForm, formset=DirFormSet)
@@ -85,14 +85,15 @@ def new_device(request):
                     Directory.objects.bulk_create(new_dirs)
                     return redirect("devices")
 
-            except IntegrityError: #If the transaction failed
+            except IntegrityError:  # If the transaction failed
                 messages.error(request, 'Error')
         print('formset errors: {}'.format(formset.errors))
         print('form errors: {}'.format(form.errors))
     else:
         form = NewDevice()
         formset = FormSet()
-    return render(request,'application/new_device.html', {'form': form, 'formset': formset, 'can_delete': False})
+    return render(request, 'application/new_device.html', {'form': form, 'formset': formset, 'can_delete': False})
+
 
 class EditDevice(UpdateView):
     model = Device
@@ -104,7 +105,7 @@ class EditDevice(UpdateView):
         context = super(EditDevice, self).get_context_data(**kwargs)
         current_dirs = Directory.objects.filter(device=self.get_object())
         dir_data = [{'path_name': direc.label, 'path': direc.path}
-                     for direc in current_dirs]
+                    for direc in current_dirs]
         context['formset'] = self.FormSet(initial=dir_data)
         return context
 
@@ -136,13 +137,15 @@ class EditDevice(UpdateView):
     def get_success_url(self):
         return reverse_lazy("devices")
 
+
 class DelDevice(DeleteView):
     model = Device
+
     def get_success_url(self):
         return reverse_lazy("devices")
 
-def category_settings(request):
 
+def category_settings(request):
     FormSet = formset_factory(CatForm, formset=CatFormSet)
     current_cats = list(Category.objects.all())
     data = [{'name': c.name, 'path': c.path}
@@ -178,6 +181,7 @@ def category_settings(request):
     else:
         form = FormSet(initial=data)
     return render(request, 'application/categories.html', {'form': form})
+
 
 class DeviceSettings(ListView):
     model = Device

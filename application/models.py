@@ -18,6 +18,16 @@ class Seedbox(models.Model):
         verbose_name_plural = 'Clients'
 
 
+class Torrent(models.Model):
+    client = models.ForeignKey('Seedbox', related_name='torrent_client', on_delete=models.CASCADE)
+    category = models.ForeignKey('Category', related_name='torrent_category', on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, default='N/A')
+    state = models.CharField(max_length=50, default='')
+    progress = models.IntegerField()
+    size = models.CharField(max_length=10, default='')
+    ratio = models.FloatField()
+
+
 class Category(models.Model):
     device = models.ForeignKey('Device', related_name='category', on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=20, default='')
