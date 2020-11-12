@@ -1,59 +1,22 @@
 {% extends 'base.html' %}
+{% load render_table from django_tables2 %}
 {% load static %}
 {% block content %}
 <br><br>
-    <div class="row">
-        {% if torrents %}
-        <table class="col s10 offset-s1 highlight">
-            <thead>
-            <tr>
-                <th class="center">Client</th>
-                <th></th>
-                <th>Name</th>
-                <th></th>
-                <th>Category</th>
-                <th></th>
-                <th>Status</th>
-                <th>Ratio</th>
-                <th>Size</th>
-                <th class="center">Progress</th>
-            </tr>
-            </thead>
 
-            <tbody>
-            {% for t in torrents %}
 
-            <tr>
-                <td class="center"><a href="http://10.0.0.22:8080">{{t.client}}</a></td>
-                <td></td>
-                <td>{{t.name}}</td>
-                <td></td>
-                {% if t.category %}
-                <td>{{t.category}}</td>
-                {% else %}
-                <td><label>&emsp; NA</label></td>
-                {% endif %}
-                <td></td>
-                <td>{{t.state}}</td>
-                <td>{{t.ratio}}</td>
-                <td>{{t.size}}</td>
-                <td class="center">
-                    <label>{{t.progress}}%</label>
-                    <div class="progress">
-                        <div class="determinate" style="width: {{t.progress}}%"></div>
-                    </div>
-                </td>
+<div class="row">
 
-            </tr>
+    {% if no_torrents == False %}
+    <div class="col s10 offset-s1" style="height: 700px; overflow-y: scroll;">
+        {% render_table table %}
+    </div>
 
-            {% endfor %}
-            </tbody>
+    {% else %}
+    <p class="center">Nothing here :(</p>
+    <p class="center">Try <a href="/settings/clients">adding a client</a></p>
+    {% endif %}
 
-        </table>
-        {% else %}
-        <p class="center">Nothing here :(</p>
-        <p class="center">Try <a href="/settings/clients">adding a client</a></p>
-        {% endif %}
 </div>
 
 

@@ -1,6 +1,6 @@
 from time import sleep
 from .functions import get_torrents
-from .models import MoveQueue, Category, Directory, Moving, Moved
+from .models import MoveQueue, Category, Directory
 from .transfer.ssh import remote_to_local, remote_to_remote
 from .models import Seedbox
 
@@ -26,8 +26,7 @@ def check_finished_download():
 
 def move_downloads():
     queue = MoveQueue.objects.all()
-    moving = Moving.objects.all().values_list('filename', flat=True)
-    moved = Moved.objects.all().values_list('filename', flat=True)
+
 
     for file in queue:
         #print(f'{file.filename} will be moved to {file.category.device.name}s {file.category.name} folder which is {Directory.objects.get(label=file.category.name).path}')
@@ -38,8 +37,6 @@ def move_downloads():
                        'folder': Directory.objects.get(label=file.category.name).path}
 
         if file.category.device.type == 'ssh':
-            if file.filename not in moving or file.filename not in moved:
-                m = Moving(filename=file.filename)
-                m.save()
+            if file.filename:
                 print('MOVING1')
                 remote_to_remote(source=source, destination=destination)

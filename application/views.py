@@ -8,11 +8,19 @@ from django.views.generic.list import ListView
 from .forms import *
 from .functions import get_torrents, pull_categories, get_save_location
 from .models import *
-
+from .tables import TorrentTable
+from django_tables2 import RequestConfig
 
 def home(request):
-    # remote_to_local(Seedbox.objects.get(pk=13),'/home/dpasc/testing')
-    return render(request, 'application/index.html', {'torrents': get_torrents()})
+    get_torrents()
+
+    if Torrent.objects.exists():
+        is_empty = False
+    else:
+        is_empty = True
+
+    table = TorrentTable(Torrent.objects.all())
+    return render(request, 'application/index.html', {'table': table, 'no_torrents': is_empty})
 
 
 class ClientSettings(ListView):

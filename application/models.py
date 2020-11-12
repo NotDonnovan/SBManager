@@ -27,6 +27,8 @@ class Torrent(models.Model):
     size = models.CharField(max_length=10, default='')
     ratio = models.FloatField()
 
+    def __str__(self):
+        return self.name
 
 class Category(models.Model):
     device = models.ForeignKey('Device', related_name='category', on_delete=models.CASCADE, blank=True, null=True)
@@ -63,32 +65,12 @@ class Directory(models.Model):
 
 
 class MoveQueue(models.Model):
-    client = models.ForeignKey('Seedbox', related_name='queue', on_delete=models.CASCADE, blank=True, null=True)
-    filename = models.CharField(max_length=200, default='')
-    category = models.ForeignKey('Category', related_name='queue_cat', on_delete=models.CASCADE, blank=True, null=True)
+    torrent = models.ForeignKey('Torrent', related_name='queue', on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, default='queued')
 
     def __str__(self):
-        return self.filename
+        return self.torrent.name
 
     class Meta:
         verbose_name = 'Queue'
         verbose_name_plural = 'Queue'
-
-
-class Moving(models.Model):
-    filename = models.CharField(max_length=200, default='')
-
-    def __str__(self):
-        return self.filename
-
-    class Meta:
-        verbose_name_plural = 'Moving'
-
-class Moved(models.Model):
-    filename = models.CharField(max_length=200, default='')
-
-    def __str__(self):
-        return self.filename
-
-    class Meta:
-        verbose_name_plural = 'Moved'

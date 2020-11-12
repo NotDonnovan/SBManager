@@ -16,7 +16,6 @@ def remote_to_local(source, destination):
 
 
 def remote_to_remote(source, destination):
-    from application.models import Moved, Moving
 
     print('MOVING')
 
