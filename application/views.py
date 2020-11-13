@@ -6,14 +6,14 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView, DeleteView
 from django.views.generic.list import ListView
 from .forms import *
-from .functions import get_torrents, pull_categories, get_save_location
+from .functions import get_torrents, pull_categories, get_save_location, ping
 from .models import *
 from .tables import TorrentTable
 from django_tables2 import RequestConfig
 
 def home(request):
     get_torrents()
-
+    ping('10.0.0.48')
     if Torrent.objects.exists():
         is_empty = False
     else:

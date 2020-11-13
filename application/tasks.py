@@ -1,42 +1,48 @@
 from time import sleep
 from .functions import get_torrents
-from .models import MoveQueue, Category, Directory
+from .models import MoveQueue, Category, Directory, Torrent
 from .transfer.ssh import remote_to_local, remote_to_remote
 from .models import Seedbox
 
+
 def check_finished_download():
+    moved = False
     while True:
         categories = Category.objects.all()
         new_files = []
-        torrents = get_torrents()
-        queue = MoveQueue.objects.all().values_list('filename', flat=True)
+        torrents = Torrent.objects.all()
+        queue = MoveQueue.objects.all().values_list('torrent', flat=True)
         for t in torrents:
-            cat, name, prog = t['category'], t['name'], t['progress']
-            if prog == 100 and name not in queue:
+            if t.progress == 100 and t.id not in queue:
                 for c in categories:
-                    if c.name == cat and c.path != 'None':
-                        new_files.append(MoveQueue(filename=name, category=Category.objects.get(name=cat), client=Seedbox.objects.get(name=t['client'])))
+                    if c == t.category and c.path != 'None':
+                        new_files.append(MoveQueue(torrent=t))
 
         MoveQueue.objects.bulk_create(new_files)
 
         if MoveQueue.objects.all():
-            move_downloads()
-        sleep(60)
+            moved = move_downloads()
+        if moved:
+            sleep(60)
 
 
 def move_downloads():
     queue = MoveQueue.objects.all()
-
-
     for file in queue:
-        #print(f'{file.filename} will be moved to {file.category.device.name}s {file.category.name} folder which is {Directory.objects.get(label=file.category.name).path}')
-        source = {'client': file.client,
-                  'file': file.filename}
+        source = {'torrent': file.torrent,
+                  'client': file.torrent.client,
+                  'file': file.torrent.name}
 
-        destination = {'device': file.category.device,
-                       'folder': Directory.objects.get(label=file.category.name).path}
+        destination = {'device': file.torrent.category.device,
+                       'folder': Directory.objects.get(label=file.torrent.category.name).path}
 
-        if file.category.device.type == 'ssh':
-            if file.filename:
-                print('MOVING1')
-                remote_to_remote(source=source, destination=destination)
+        if file.torrent.category.device.type == 'ssh' and file.status == 'queued':
+            print('MOVING1')
+            q = MoveQueue.objects.get(torrent=file.torrent)
+            q.status = 'moving'
+            q.save()
+            remote_to_remote(source=source, destination=destination)
+            return True
+
+        if file.status != 'queued':
+            return False

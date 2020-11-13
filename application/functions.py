@@ -131,3 +131,13 @@ def get_save_location(client):
         password=client.password
     )
     return (qbt_client.app.defaultSavePath)
+
+
+def ping(ip):
+    import subprocess
+    from time import sleep
+    cmd = subprocess.Popen(f'if ping -c 1 {ip} &> /dev/null; then echo PASS; else echo "FAIL"; fi',stdout=subprocess.PIPE, shell=True)
+
+    out, err = cmd.communicate()
+    print(out)
+    print(err)
