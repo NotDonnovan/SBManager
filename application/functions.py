@@ -6,20 +6,20 @@ from .models import Seedbox, Category, Directory, Device, Torrent
 
 def status_rename(string):
     status = {
-        'pausedUP' : 'Complete',
-        'stalledUP' : 'Seeding (Idle)',
-        'uploading' : 'Seeding',
+        'pausedUP': 'Complete',
+        'stalledUP': 'Seeding (Idle)',
+        'uploading': 'Seeding',
         'forcedUP': 'Seeding (f)',
-        'queuedUP' : 'Queued',
-        'queuedDL' : 'Queued',
-        'checkingUP' : 'Checking',
-        'downloading' : 'Downloading',
-        'forceDL' : 'Downloading (f)',
-        'metaDL' : 'Fetching Metadata',
-        'pausedDL' : 'Paused',
-        'stalledDL' : 'Stalled',
-        'checkingDL' : 'Checking',
-        'checkingResumeData' : 'Checking',
+        'queuedUP': 'Queued',
+        'queuedDL': 'Queued',
+        'checkingUP': 'Checking',
+        'downloading': 'Downloading',
+        'forceDL': 'Downloading (f)',
+        'metaDL': 'Fetching Metadata',
+        'pausedDL': 'Paused',
+        'stalledDL': 'Stalled',
+        'checkingDL': 'Checking',
+        'checkingResumeData': 'Checking',
     }
 
     if string in status.keys():
@@ -27,14 +27,16 @@ def status_rename(string):
 
     return string
 
+
 def get_torrents():
     clients = []
     torrents = []
-    tors = []
+    tors_in_client = []
+    old_torrents = Torrent.objects.all().values_list('name', flat=True)
 
     for box in Seedbox.objects.all():
         clients.append({
-            box.name : qbittorrentapi.Client(
+            box.name: qbittorrentapi.Client(
                 host=box.host,
                 port=box.port,
                 username=box.login,
@@ -45,30 +47,34 @@ def get_torrents():
     for client in range(len(clients)):
         for obj in clients[client].values():
             for torrent in obj.torrents_info(sort='progress', reverse=True):
-                torrents.append(Torrent(name=torrent.name,
-                                    state=status_rename(torrent.state),
-                                    progress=(round(torrent.progress * 100)),
-                                    size=(size(torrent.size, system=alternative)),
-                                    ratio=(round(torrent.ratio, 2)),
-                                    client=Seedbox.objects.get(name=list(clients[client].keys())[0]),
-                                    category=Category.objects.get(name=torrent.category)
-                                    ))
+                new_torrent = Torrent(name=torrent.name,
+                                      state=status_rename(torrent.state),
+                                      progress=(round(torrent.progress * 100)),
+                                      size=(size(torrent.size, system=alternative)),
+                                      ratio=(round(torrent.ratio, 2)),
+                                      client=Seedbox.objects.get(name=list(clients[client].keys())[0]),
+                                      category=Category.objects.get(name=torrent.category)
+                                      )
+                tors_in_client.append(new_torrent)
 
-                #torrents.append(
-                #    {'name': torrent.name,
-                #     'state': status_rename(torrent.state),
-                #     'progress': (round(torrent.progress * 100)),
-                #     'size': (size(torrent.size, system=alternative)),
-                #     'ratio': (round(torrent.ratio, 2)),
-                #     'client': list(clients[client].keys())[0],
-                #     'category': torrent.category
-                #     }
-                #)
+                if torrent.name not in old_torrents:
+                    torrents.append(new_torrent)
 
-    Torrent.objects.all().delete()
+    if Torrent.objects.exists():
+        names = []
+        for t in tors_in_client:
+            names.append(t.name)
+
+        for o in old_torrents:
+            if o in names:
+                print(f'Not Deleting {o}')
+            else:
+                print(f'Deleting {o}')
+                Torrent.objects.get(name=o).delete()
+
     Torrent.objects.bulk_create(torrents)
 
-    return tors
+
 def pull_categories(client):
     qbt_client = qbittorrentapi.Client(
         host=client.host,
@@ -90,19 +96,20 @@ def pull_categories(client):
         print('adding new cats')
         Category.objects.bulk_create(new_categories)
 
+
 def get_directories():
     dirs = [('None', 'None')]
     d = []
     used = {}
     for dev in list(Directory.objects.all().values_list('device', flat=True)):
         devname = Device.objects.get(pk=dev).name
-        for dirname in list(Directory.objects.all().values_list('label',flat=True)):
+        for dirname in list(Directory.objects.all().values_list('label', flat=True)):
             if devname in list(used.keys()):
                 pass
             else:
                 used[devname] = []
 
-            if dirname in Directory.objects.filter(device=dev).values_list('label',flat=True):
+            if dirname in Directory.objects.filter(device=dev).values_list('label', flat=True):
                 if dirname in used[devname]:
                     pass
                 else:
@@ -115,6 +122,7 @@ def get_directories():
 
     return dirs
 
+
 def get_save_location(client):
     qbt_client = qbittorrentapi.Client(
         host=client.host,
@@ -122,6 +130,4 @@ def get_save_location(client):
         username=client.login,
         password=client.password
     )
-    return(qbt_client.app.defaultSavePath)
-
-
+    return (qbt_client.app.defaultSavePath)
