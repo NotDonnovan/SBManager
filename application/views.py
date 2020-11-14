@@ -198,3 +198,10 @@ class DeviceSettings(ListView):
 
     def get_queryset(self):
         return Device.objects.all()
+
+class LogView(ListView):
+    model = LogEntry
+    template_name = 'application/logs.html'
+
+    def get_queryset(self):
+        return LogEntry.objects.all()

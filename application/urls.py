@@ -14,6 +14,7 @@ urlpatterns = [
     path('settings/devices/edit/<int:pk>', views.EditDevice.as_view(), name='edit_device'),
     path('settings/devices/delete/<int:pk>', views.DelDevice.as_view(), name='delete_device'),
     path('settings/categories', views.category_settings, name='categories'),
+    path('settings/logs', views.LogView.as_view(), name='logs'),
 
 
 ]

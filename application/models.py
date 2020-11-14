@@ -74,3 +74,7 @@ class MoveQueue(models.Model):
     class Meta:
         verbose_name = 'Queue'
         verbose_name_plural = 'Queue'
+
+class LogEntry(models.Model):
+    entry = models.CharField(max_length=500, default='')
+    created = models.DateTimeField(auto_now=True)
