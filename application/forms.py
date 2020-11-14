@@ -17,6 +17,10 @@ class NewClient(forms.Form):
     password = forms.CharField(max_length=100, widget=forms.PasswordInput)
     port = forms.FloatField(initial=8080)
     user = forms.CharField(max_length=20, label='User (SSH)')
+    save_loc = forms.CharField(max_length=200, initial='/', label='Save Location',
+                               widget=forms.TextInput(attrs={'class': 'tooltipped',
+                                                             'data-position': 'top',
+                                                             'data-tooltip': 'Where does this client save its downloads?'}))
 
 
 class EditClientForm(forms.ModelForm):

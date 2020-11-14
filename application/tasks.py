@@ -21,9 +21,9 @@ def check_finished_download():
         MoveQueue.objects.bulk_create(new_files)
 
         if MoveQueue.objects.all():
-            moved = move_downloads()
-        if moved:
-            sleep(60)
+            move_downloads()
+
+        sleep(60)
 
 
 def move_downloads():
@@ -37,12 +37,8 @@ def move_downloads():
                        'folder': Directory.objects.get(label=file.torrent.category.name).path}
 
         if file.torrent.category.device.type == 'ssh' and file.status == 'queued':
-            print('MOVING1')
             q = MoveQueue.objects.get(torrent=file.torrent)
             q.status = 'moving'
             q.save()
             remote_to_remote(source=source, destination=destination)
-            return True
 
-        if file.status != 'queued':
-            return False

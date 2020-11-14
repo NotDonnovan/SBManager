@@ -135,9 +135,10 @@ def get_save_location(client):
 
 def ping(ip):
     import subprocess
-    from time import sleep
-    cmd = subprocess.Popen(f'if ping -c 1 {ip} &> /dev/null; then echo PASS; else echo "FAIL"; fi',stdout=subprocess.PIPE, shell=True)
 
-    out, err = cmd.communicate()
-    print(out)
-    print(err)
+    cmd = (subprocess.Popen(['ping', '-c', '1', '-W', '2', ip], stdout=subprocess.DEVNULL))
+    cmd.wait()
+    if cmd.poll() == 0:
+        return True
+    elif cmd.poll() == 1:
+        return False

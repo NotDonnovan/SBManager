@@ -9,11 +9,11 @@ from .forms import *
 from .functions import get_torrents, pull_categories, get_save_location, ping
 from .models import *
 from .tables import TorrentTable
-from django_tables2 import RequestConfig
+
 
 def home(request):
     get_torrents()
-    ping('10.0.0.48')
+    ping('10.0.0.255')
     if Torrent.objects.exists():
         is_empty = False
     else:
@@ -40,7 +40,8 @@ def new_client(request):
             l = form.cleaned_data['login']
             p = form.cleaned_data['password']
             pt = form.cleaned_data['port']
-            client = Seedbox(name=n, host=h, login=l, password=p, port=int(pt))
+            u = form.cleaned_data['user']
+            client = Seedbox(name=n, host=h, login=l, password=p, user=u, port=int(pt))
             save_loc = get_save_location(client)
             client.save_loc = save_loc
             client.save()
@@ -77,7 +78,7 @@ def new_device(request):
         if form.is_valid() and formset.is_valid():
             n = form.cleaned_data['name']
             h = form.cleaned_data['host']
-            u = form.cleaned_data['User (SSH)']
+            u = form.cleaned_data['user']
             d = Device(name=n, host=h, user=u)
             d.save()
 
